@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animação Interativa Sol & Lua - Estilo ChatGPT | Canvas 2D Frontend</title>
+  <meta name="description" content="Animação interativa estilo ChatGPT para home de sites com morphing Sol/Lua, física de partículas e código frontend pronto para implementar.">
+  
+  <!-- Fonts Google: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Ambient background light dynamics -->
+  <div class="ambient-glow" id="ambientGlow"></div>
+  <div class="grid-background"></div>
+
+  <!-- Header Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <span class="logo-dot"></span>
+        </div>
+        <span class="logo-text">Orbital<span class="logo-highlight">UI</span></span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#demo" class="nav-link active">Demonstração</a>
+        <a href="#controls" class="nav-link">Controles</a>
+        <a href="#code" class="nav-link">Código Fonte</a>
+        <a href="#docs" class="nav-link">Como Usar</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-theme-toggle" id="themeToggleBtn" aria-label="Alternar tema">
+          <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span id="themeBtnText">Alternar Modo</span>
+        </button>
+        <a href="#code" class="btn btn-primary">
+          <span>Obter Código</span>
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section" id="demo">
+      <div class="container">
+        <div class="hero-header">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>✦ Animação Interativa Frontend • Estilo ChatGPT</span>
+          </div>
+          <h1 class="hero-title">
+            O Esplendor do Sol e o Mistério da Lua em <span class="gradient-text">Movimento Fluido</span>
+          </h1>
+          <p class="hero-subtitle">
+            Animação 100% interativa com física de partículas magnéticas, efeito tilt 3D ao passar o mouse e transição de morfe contínua estilo OpenAI/ChatGPT.
+          </p>
+        </div>
+
+        <!-- Interactive Canvas Stage -->
+        <div class="canvas-stage-wrapper">
+          <div class="canvas-stage" id="canvasStage">
+            <!-- Canvas Object -->
+            <canvas id="sunMoonCanvas"></canvas>
+
+            <!-- Status HUD Overlay -->
+            <div class="stage-hud top-left">
+              <span class="hud-pill"><span class="pulse-dot"></span> 60 FPS</span>
+              <span class="hud-pill" id="hudMode">Modo: Sol Plasma</span>
+            </div>
+
+            <div class="stage-hud top-right">
+              <button class="hud-action-btn" id="triggerPulseBtn" title="Disparar Onda de Partículas">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                <span>Pulso Solar</span>
+              </button>
+            </div>
+
+            <div class="stage-hud bottom-center">
+              <span class="hud-hint">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M15 15l-3 3-3-3M12 3v15"/></svg>
+                Mova o cursor para inclinar 3D • Clique na esfera para alternar Sol/Lua
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Morph Action Buttons -->
+        <div class="morph-actions">
+          <button class="morph-btn active" id="btnModeSun">
+            <span class="morph-icon sun">☀️</span>
+            <div class="morph-info">
+              <strong>Modo Sol</strong>
+              <small>Fótons de energia e plasma dourado</small>
+            </div>
+          </button>
+
+          <div class="morph-slider-inline">
+            <input type="range" id="morphSliderInline" min="0" max="1" step="0.001" value="0" aria-label="Transição Sol para Lua">
+            <div class="morph-labels">
+              <span>0% Sol</span>
+              <span id="morphPercentage">0%</span>
+              <span>100% Lua</span>
+            </div>
+          </div>
+
+          <button class="morph-btn" id="btnModeMoon">
+            <span class="morph-icon moon">🌙</span>
+            <div class="morph-info">
+              <strong>Modo Lua</strong>
+              <small>Poeira estelar e reflexo cósmico</small>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Customization Deck (Control Panel) -->
+    <section class="controls-section" id="controls">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Ajuste os Parâmetros da Animação</h2>
+          <p class="section-subtitle">Personalize em tempo real a física, velocidade, brilho e número de partículas para combinar perfeitamente com a home do seu site.</p>
+        </div>
+
+        <div class="controls-grid">
+          <!-- Control Card 1 -->
+          <div class="control-card">
+            <div class="card-header">
+              <div class="card-icon">✨</div>
+              <div>
+                <h3>Densidade de Partículas</h3>
+                <p>Quantidade de pontos solares/estelares</p>
+              </div>
+            </div>
+            <div class="range-group">
+              <input type="range" id="paramParticles" min="30" max="300" step="5" value="120">
+              <span class="range-val" id="valParticles">120</span>
+            </div>
+          </div>
+
+          <!-- Control Card 2 -->
+          <div class="control-card">
+            <div class="card-header">
+              <div class="card-icon">🌀</div>
+              <div>
+                <h3>Velocidade de Rotação</h3>
+                <p>Velocidade dos feixes e órbita</p>
+              </div>
+            </div>
+            <div class="range-group">
+              <input type="range" id="paramSpeed" min="0.2" max="3.0" step="0.1" value="1.0">
+              <span class="range-val" id="valSpeed">1.0x</span>
+            </div>
+          </div>
+
+          <!-- Control Card 3 -->
+          <div class="control-card">
+            <div class="card-header">
+              <div class="card-icon">🧲</div>
+              <div>
+                <h3>Atração Magnética</h3>
+                <p>Reatividade das partículas ao cursor</p>
+              </div>
+            </div>
+            <div class="range-group">
+              <input type="range" id="paramGravity" min="0" max="2.5" step="0.1" value="1.2">
+              <span class="range-val" id="valGravity">1.2x</span>
+            </div>
+          </div>
+
+          <!-- Control Card 4 -->
+          <div class="control-card">
+            <div class="card-header">
+              <div class="card-icon">💡</div>
+              <div>
+                <h3>Intensidade do Brilho (Glow)</h3>
+                <p>Radiação de luz da atmosfera do astro</p>
+              </div>
+            </div>
+            <div class="range-group">
+              <input type="range" id="paramGlow" min="0.2" max="2.0" step="0.1" value="1.0">
+              <span class="range-val" id="valGlow">1.0x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-footer">
+          <button class="btn btn-secondary" id="btnResetParams">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Restaurar Padrões</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Code Export & Snippets Section -->
+    <section class="code-section" id="code">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Código Frontend para Implementação</h2>
+          <p class="section-subtitle">Copie o código pronto em HTML, CSS e JS puro ou React (JSX) para adicionar esta animação na home do seu projeto.</p>
+        </div>
+
+        <div class="code-container">
+          <!-- Code Tabs -->
+          <div class="code-tabs">
+            <button class="tab-btn active" data-tab="js">
+              <span class="tab-lang js">JS</span>
+              <span>Motor (animation.js)</span>
+            </button>
+            <button class="tab-btn" data-tab="html">
+              <span class="tab-lang html">HTML</span>
+              <span>Estrutura (index.html)</span>
+            </button>
+            <button class="tab-btn" data-tab="css">
+              <span class="tab-lang css">CSS</span>
+              <span>Estilos (styles.css)</span>
+            </button>
+            <button class="tab-btn" data-tab="react">
+              <span class="tab-lang react">JSX</span>
+              <span>Componente React</span>
+            </button>
+
+            <button class="copy-btn" id="btnCopyCode" title="Copiar código exibido">
+              <svg class="copy-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <svg class="check-icon hidden" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="20 6 9 17 4 12"/></svg>
+              <span id="copyBtnLabel">Copiar Código</span>
+            </button>
+          </div>
+
+          <!-- Code Content Panel -->
+          <div class="code-window">
+            <pre><code id="codeSnippet" class="language-js"></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Usage & Integration Guide -->
+    <section class="docs-section" id="docs">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Como Integrar no Seu Site em 3 Passos</h2>
+          <p class="section-subtitle">Implementação simples, sem dependências externas pesadas nem frameworks obrigatórios.</p>
+        </div>
+
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">01</div>
+            <h3>Insira o Canvas</h3>
+            <p>Adicione a tag <code>&lt;canvas id="sunMoonCanvas"&gt;&lt;/canvas&gt;</code> na seção Hero do seu layout HTML.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">02</div>
+            <h3>Aplique o CSS</h3>
+            <p>Copie os estilos da aba CSS para definir o dimensionamento responsivo e os brilhos ambientais da atmosfera.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-number">03</div>
+            <h3>Inicie a Animação</h3>
+            <p>Importe o arquivo <code>animation.js</code> e chame <code>initSunMoonAnimation('sunMoonCanvas')</code> ao carregar a página.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-brand">
+        <span class="logo-text">Orbital<span class="logo-highlight">UI</span></span>
+        <p>Animações Interativas de Alta Performance para a Web Moderna.</p>
+      </div>
+      <div class="footer-meta">
+        <span>Desenvolvido com HTML5 Canvas 2D • CSS3 • JavaScript Vanilla</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="animation.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
