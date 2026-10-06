@@ -6,7 +6,7 @@ Uma animação interativa premium desenvolvida em **HTML5 Canvas 2D + CSS3 + Jav
 ![Demonstração da Animação](C:/Users/Cibele/.gemini/antigravity/scratch/sun-moon-animation/index.html)
 ![Tecnologia Canvas](https://img.shields.br/badge/Canvas-HTML5%202D-orange)
 ![Sem Dependências](https://img.shields.br/badge/Depend%C3%AAsncias-Nenhuma-blue)
-![Demonstração da Animação](file:///C:/Users/Cibele/.gemini/antigravity/scratch/sun-moon-animation/index.html)
+
 ---
 
 ## ✨ Recursos
